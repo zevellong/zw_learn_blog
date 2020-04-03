@@ -1,0 +1,85 @@
+1. gdb
+    gcc -gstabs -o xxx xxx.c //-gstabs选项编译或者汇编可执行文件
+    gdb xxx
+
+    常用命令：
+        list
+        break main
+        next
+(1) 数据检查命令
+    info registers　打印寄存器信息
+    print/(dxt) $eax    打印10 16 2 进制寄存器信息
+    x/nyz &output  　　　n为整数，要显示的字符数    y可选　cdx　字符１０进制　１６　ｚ（bhw）(8bit字节　16bit半字　32bit字)
+
+
+2. gprof
+     gcc -o demo demo.c -pg //生成gprof简档
+     ./demo                 //此时　gmon.ouｔ自动生成
+     gprof demo > g.txt     //使用gmon.out生成表
+     cat g.txt
+
+
+
+
+
+３.学习vi
+(1) 移动光标
+    hjkl    左下上右
+    b   前一个单词
+    w   后一个单词
+    ｅ  单词尾
+    ＋－　下一行／上一行第一个字符
+    ０$ 行开头结尾
+(2) 编辑命令
+    对象        更改        删除        复制
+    一个单词    cw          dw         
+2.学习vi
+(1) 移动光标
+    b   前一个单词
+    w   后一个单词
+    ｅ  单词尾
+    ＋－　下一行／上一行第一个字符
+    ０$ 行开头结尾
+(2) 编辑命令
+    对象        更改        删除        复制
+    一个单词    cw          dw          yw
+    ３个单词    3cw         3dw         3yw
+    整行        cc          dd         yy
+    一个字符    r           x           yl
+    5个字符    5s           5x         5yl
+(3)文本的创建与操作
+i   插入    
+o   下一行开头插入
+u   撤销
+p   粘贴 yw
+    ３个单词    3cw         3dw         3yw
+    整行        cc          dd         yy
+    一个字符    r           x           yl
+    5个字符    5s           5x         5yl
+(3)文本的创建与操作
+i   插入
+o   下一行开头插入
+u   撤销
+p   粘贴
+(４)　快速移动
+ctrl + F/B      往前／后移动一个屏幕
+ｚ+enter        调整当前光标至屏幕顶
+z.   z-
+H/M/L           移动到屏幕的顶行／中间行／底行
+（［｛           句　段　节　开头
+(5) 搜索
+    ／xxx   
+    /+enter ?+enter 重复搜索前　后
+    fx Fx tx Tx     本行ｘ字符
+    nG              转至ｎ行
+    ctrl+g          显示当前行号
+    ％s/foo/bar/g   全局替换foo -> bar \c 表示大小写不敏感
+
+ 
+
+４. make
+
+
+5. alias unalias
+    alias 
+    alias xx='xx -c'

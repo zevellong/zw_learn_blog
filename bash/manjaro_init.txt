@@ -1,0 +1,78 @@
+1. pacman 
+sudo pacman-mirrors -i -c China -m rank
+sudo pacman -Syy
+在 /etc/pacman.conf 文件末尾添加以下两行
+
+[archlinuxcn]
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+
+
+#安装 archlinuxcn-keyring 包导入GPG key
+sudo pacman -Sy archlinuxcn-keyring
+sudo pacman -S yay
+
+
+中文输入法
+sudo pacman -S fcitx-sogoupinyin
+sudo pacman -S fcitx-im
+sudo pacman -S fcitx-configtool # 图形化的配置工具
+
+vscode
+chrome
+typora 
+vim 
+vsftpd
+anaconda
+bochs
+intellij idea
+netease-cloud-music
+electronic-wechat
+ranger
+virtualbox 
+youdao-dict
+texlive-most texlive-lang
+texstudio
+bootsplash-theme-kde
+
+
+安装splash screen
+sudo cp -rf /home/zw/Downloads/org.KDE-Story-Light.desktop/ 
+/usr/share/plasma/look-and-feel/
+
+sddm
+/usr/share/sddm/themes/
+sudo vim /etc/sddm.conf.d/uid.conf #调整max min 用户id范围
+
+
+youcompleteme
+yaourt cmake
+#add .vim/vimrc plug 添加 plug 'ycm/youcompleteme'
+pluginstall
+https://www.jianshu.com/p/d908ce81017a?nomobile=yes
+
+
+polybar 
+yaourt polybar
+cp -rf /usr/share/doc/polybar/ .config/
+add -> 
+#######################
+#!/bin/bash
+
+# Terminate already running bar instances
+killall -q polybar
+
+# Wait until the processes have been shut down
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+
+# Launch Polybar, using default config location ~/.config/polybar/config
+polybar mybar &
+
+echo "Polybar launched..."
+#######################
+chmod +x 
+
+kdenlive
+gimp
+wttr
+
+alacritty 参考 https://www.cnblogs.com/siyingcheng/p/11706436.html

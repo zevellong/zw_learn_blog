@@ -1,0 +1,12 @@
+longzw.hzau.edu.cn@webmail.hzau.edu.cn
+teardrop1@
+1. 重新挂载解决　readonly文件系统
+    mount -o remount,rw /dev/sda4
+
+2.  编译出现　(.text+0x17): undefined reference to `rdi'
+    rdi -> %rdi 
+
+3. DNS错误
+    sudo vim /etc/resolv.conf
+    添加　nameserver 223.5.5.5
+    关机后又无效了
