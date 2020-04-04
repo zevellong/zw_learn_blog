@@ -1,8 +1,70 @@
 # c++入门到入土
 
+### 2020-4-4
+
+## 头文件
+
+* 类的声明放在头文件
+* 在cpp文件放定义
+
+## 定义和声明
+
+* 一个cpp文件是一个编译单元
+* 定义放在头文件
+  * extern
+  * 函数原型
+  * 类声明
+
+```c++
+//防止多次被include
+#ifndef HEADER_FLAG
+#define HEADER_FLAG
+//some declaration
+#endif
+```
+
+* 一个头文件放一个声明
+* 源代码文件使用.cpp
+
+## 抽象
+
+* 在某种程度不去思考内部细节，在某一个层面上考虑
+* 一个对象分成几个部分看待
+* 符合大多数人的思路
+
+## 成员变量(Fields)
 
 
-## 2020-4-2 15:59
+
+## 构造和析构
+
+* 构造器：和类的名字一样，无返回类型，对象创建自动被调用
+* 析构函数：对象删除的时候调用
+* 初始化：构造函数调用，定义的时候才会调用
+* default构造器：没有参数
+
+## new & delete
+
+```c++
+new int;
+new int[10];
+delete p;
+delete[] p;
+```
+
+* new会分配空间，调用构造函数，返回分配的地址
+* 用new [],使用delete []
+* delete调用析构，再回收空间
+* 使用new[],调用delete，只会析构第一个，空间都会收回
+* inch table：记录地址和内存大小
+* 如果delete与table内容找不到，运行出错
+* tips：
+  * 不要用delete收回不是new的空间
+  * 不要delete两次同一块空间
+  * 可以delete null
+  * new []和dlete[]一起调用，new和delete
+
+### 2020-4-2 15:59
 
 ## template
 
