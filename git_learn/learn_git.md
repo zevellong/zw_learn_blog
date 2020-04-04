@@ -143,3 +143,9 @@ git push -u origin master #推送到远程库
 git clone https://github.com/zevellong/zw_learn_blog.git #克隆到本地库
 ```
 
+```bash
+#git push保持账号密码
+git config --global credential.helper store
+git config credential.helper store
+```
+
