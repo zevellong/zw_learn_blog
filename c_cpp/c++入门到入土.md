@@ -66,6 +66,21 @@ delete[] p;
 
 ### 2020-4-2 15:59
 
+## 拷贝构造
+
+```c++
+T::T(const T&);
+```
+
+* 成员级别的拷贝
+* 默认的拷贝构造，会将成员一个一个拷贝，指针也会拷贝， 而不是分配内存
+* Constructions vs. assignment
+  * 初始化只会做一次
+  * 构造一次也会被析构一次
+  * 一个对象construction一次，assignment多次
+* 如果是私有的，别人不能拷贝
+* 
+
 ## template
 
 * 重用代码，类型成为参数
@@ -264,4 +279,225 @@ throw <something>
 | showpos              | 加上+在正数前        |
 | scientific fixed     | 格式化浮点           |
 | unitbuf              | 任何时候都使用刷新写 |
+
+
+
+## STL
+
+[文档1](http://c.biancheng.net/stl/)          
+
+[文档2](http://www.cplusplus.com/reference/)
+
+* sort函数
+  * #include algorithm
+
+```C++
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main()
+{
+    int arr[10] = {1, 3, -3, -9 ,6 ,9 ,11};
+    sort(arr, arr+7);
+    for (int i = 0; i < 7; i++)
+        cout << arr[i] << " ";
+    cout << endl;
+    return 0;
+}
+```
+
+### string 
+
+* 相当于char *的封装
+
+* 获取一行字符串   `string s = NULL;  getline(cin,s);`
+
+```c++
+    //切记不能初始化NULL
+    std::string s;//执行默认构造函数
+    std::string s = "";//执行拷贝构造函数
+    
+    
+    string s = NULL;
+    s+ = "hello";
+    s+ = '5'
+    s+ = 65;//对应大写A
+    cout << s << endl;//打印结果 hello5A
+```
+
+* 对字符串排序
+
+```c++
+string = "5418345";
+sort(s.begin(), s.end());
+cout << s << endl;
+```
+
+* erase() 删除某字符
+  * `s.erase(s.begin())`
+* `substr(index, size);//`子字符串，size 正数取size个，size 负数倒取
+
+* string 转数字
+
+```c++
+//sstream
+string s = "1234";
+int i;
+stringstream ss;
+ss << s;
+s >> i;
+
+//atoi
+int i = stoi(s);
+```
+
+
+
+### vector
+
+```c++
+vector<int> v;//空
+vector<int> v2(4);//4个初始化0
+vector<int> v3(4, 6);// 初始为6
+
+vector<int> v(9, 10);
+for (auto i:v)  cout << i << " ";
+cout << v[1];//索引1
+cout << v.at(2);//索引2
+v.push_back(5);// 5放进v的末端
+v.resize(10); //默认为0
+v.erase(10);//删除元素10,复杂度O(n)
+cout << v.front();//头
+cout << v.back(); //尾
+sort(v.begin(), v.end());
+sort(v.begin(), v.end(), greater<int>());//从大到小
+
+
+```
+
+### stack
+
+```c++
+#include <stack>
+
+stack<int> s;//构造器
+s.push();
+s.top();//不弹出
+s.pop();
+s.size();
+s.empty();
+//方便用栈进制转换
+```
+
+### queue
+
+```
+#include <queue>
+
+queue<int> q;
+q.push(5);
+q.front();
+q.pop();
+q.size();
+
+```
+
+### map
+
+```c++
+#include <map>
+//有序的，树状结构
+map<int, int> m;
+//unorderd_map无序的，哈希结构
+
+```
+
+### set
+
+```c++
+set<int> s;//树状结构
+s.insert(3);
+s.size();
+
+```
+
+### deque
+
+```c++
+deque<int> d;
+d.push_back(3);
+d.push_front(4);
+d.pop_back();
+d.pop_front();
+```
+
+### list
+
+```c++
+list<int> li;//
+li.push_back(6);
+li.emplace_front(5);
+li.insert(++li.begin(),2);
+
+```
+
+
+
+
+
+# C语言回忆
+
+## 函数指针
+
+* 每一个函数都有地址
+
+```c
+void f(int i)
+{
+    printf("in f()  i=%d\n", i);
+}
+void g(int j)
+{
+    
+}
+int main()
+{
+    int i = 0;
+    void (*pf)(int) = f;
+    f(3);
+    (*pf)(4);
+    
+    //不推荐
+    switch(i)
+    {
+        case 0:f(0);break;
+        case 1:g(2);break;
+    }
+    
+    //推荐
+    void (*pff[])(int) = {f, g};
+    scanf("%d", &i);
+    if (i>=0 i<sizeof(fa)/sizeof(fa[0])){
+        (*pff[i])(0);
+    }
+    return 0;
+}
+```
+
+```c
+int plus(int a, int b)
+{
+    return a + b;
+}
+int minus(int a, int b)
+{
+    return a - b;
+}
+int cal(int (*f)(int, int), int a, int b)
+{
+    printf("%d\n",(*f)(a,b));
+}
+```
 
