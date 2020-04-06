@@ -280,6 +280,22 @@ throw <something>
 | scientific fixed     | 格式化浮点           |
 | unitbuf              | 任何时候都使用刷新写 |
 
+## auto_prt
+
+* 该类主要用于管理动态内存分配。
+* 当 auto_ptr 对象过期时，析构函数将使用 delete 来释放内存。如果将 new 返回的地址赋值给 auto_ptr 对象，无须记住还需要释放这些内存。在 auto_ptr 对象过期时，内存将自动被释放。
+* auto_ptr 构造函数是显式的，不存在从指针到 auto_ptr 对象的隐式类型转换
+
+```c++
+	auto_ptr<double> pd;
+	double *p_reg = new double;
+	*p_reg = 3.1415;
+	//pd = p_reg; // 不允许
+	pd = auto_ptr <double> (p_reg); //允许
+	//auto_ptr <double> panto =p_reg; //不允许
+	auto_ptr <double> pauto (p_reg); //允许
+```
+
 
 
 ## STL
@@ -311,20 +327,156 @@ int main()
 ### string 
 
 * 相当于char *的封装
-
 * 获取一行字符串   `string s = NULL;  getline(cin,s);`
+
+| 函数名称                          | 功能                         |
+| --------------------------------- | ---------------------------- |
+| 构造函数                          | 产生或复制字符串             |
+| 析构函数                          | 销毁字符串                   |
+| =，assign                         | 赋以新值                     |
+| Swap                              | 交换两个字符串的内容         |
+| + =，append( )，push_back()       | 添加字符                     |
+| insert ()                         | 插入字符                     |
+| erase()                           | 删除字符                     |
+| clear ()                          | 移除全部字符                 |
+| resize ()                         | 改变字符数量                 |
+| replace()                         | 替换字符                     |
+| +                                 | 串联字符串                   |
+| ==，！ =，<，<=，>，>=，compare() | 比较字符串内容               |
+| size()，length()                  | 返回字符数量                 |
+| max_size ()                       | 返回字符的最大可能个数       |
+| empty ()                          | 判断字符串是否为空           |
+| capacity ()                       | 返回重新分配之前的字符容量   |
+| reserve()                         | 保留内存以存储一定数量的字符 |
+| [],at()                           | 存取单一字符                 |
+| >>，getline()                     | 从 stream 中读取某值         |
+| <<                                | 将值写入 stream              |
+| copy()                            | 将内容复制为一个 C - string  |
+| c_str()                           | 将内容以 C - string 形式返回 |
+| data()                            | 将内容以字符数组形式返回     |
+| substr()                          | 返回子字符串                 |
+| find()                            | 搜寻某子字符串或字符         |
+| begin( )，end()                   | 提供正向迭代器支持           |
+| rbegin()，rend()                  | 提供逆向迭代器支持           |
+| get_allocator()                   | 返回配置器                   |
 
 ```c++
     //切记不能初始化NULL
     std::string s;//执行默认构造函数
     std::string s = "";//执行拷贝构造函数
+	string s(str, strbegin, strlen) //将字符串str中始于strbegin、长度为strlen的部分作为字符串初值
+	strings(num, c) //生成一个字符串，包含num个c字符
+	strings(strs, beg, end)    //以区间[beg, end]内的字符作为字符串s的初值
     
-    
-    string s = NULL;
+
     s+ = "hello";
     s+ = '5'
     s+ = 65;//对应大写A
     cout << s << endl;//打印结果 hello5A
+
+
+	std::string s('x');    //错误
+	std::string s(1, 'x');    //正确
+	std::string s("x"); // 正确
+
+```
+
+* 获取字符串长度
+
+```c++
+	s.size()
+    s.length()
+    s.max_size()//返回最大包含字符数，超出后抛出length_error
+```
+
+* 字符串的比较
+
+```c++
+    cout << A.compare (B)  << endl;
+    cout << A.compare(2,2,B,2,2) << endl;
+    cout << (ss == s2) << endl;
+    cout << (stoi(ss) < stoi(s2) )<< endl;
+    cout << "ss:" << ss << "  s2" << s2 << endl;
+```
+
+* 字符串的修改
+
+```c++
+	A.swap(B);
+	
+	//insert
+	string str = "meihao";
+	cout << str.insert(0,2,'A') << endl;//AAmeihao
+	
+	str = "meihao"; 
+	cout << str.insert(1,"AA") << endl;//mAAeihao
+	
+	str = "meihao";
+	cout << str.insert(1,"AAAAAA", 3) << endl; //mAAAeihao
+	
+	str = "meihao";
+	str.insert(++str.begin(),2,'A');//不返回 
+	cout << str << endl;
+
+	//append
+	string str = "meihao";
+	cout << str.append("~live") << endl; //meihao~live
+	
+	str = "meihao";
+	cout << str.append("~live", 2) << endl; //meihao~l
+	
+	str = "meihao";
+	cout << str.append("~live", 2, 3) << endl; //meihaoive
+	
+	str = "meihao";
+	cout << str.append(10, 'A') << endl; //meihaoAAAAAAAAAA
+	
+	str = "meihao";
+	string str2 = "live";	
+	cout << str.append(str2.begin(), str2.end()) << endl;
+	//meihaolive
+
+
+
+	//replace
+	string var = "ABCDEFG";
+	const string dest1 = "1234";
+	string dest2 = "5678";
+	var = "ABCDEFG";
+	cout << var.replace(3,1, dest1) << endl;//ABC1234EFG (1234 rep D)
+	
+	var = "ABCDEFG";
+	cout << var.replace (3, 1, 5, 'x')  << endl;//ABCxxxxxEFG
+	
+	var = "ABCDEFG";
+	cout << var.replace(3, 1, dest1, 2, 2) << endl;//ABC34EFG
+	
+	var = "ABCDEFG";
+	cout << var.replace(var.begin(), var.end(), dest2) << endl;//5678
+```
+
+* 字符串查找
+
+```c++
+	string source = "ABCDEFG";
+	cout << (source.find("H") == -1) << endl;//return true;not find
+	
+	cout << source.find("FG") << endl;//5
+	
+	cout << (source.find("FG",6) == -1) << endl;//return true;not find
+	
+	cout << source.find("FG",0,1) << endl; // only find 'F', return 5
+	
+	cout << source.find_first_of("CDE", 0 , 4);//return 2
+	cout << source.find_last_of("CDE") << endl;//return 4
+```
+
+* 迭代器
+
+```c++
+string str("abcdefg");
+string::iterator ite;
+
 ```
 
 * 对字符串排序
@@ -353,7 +505,21 @@ s >> i;
 int i = stoi(s);
 ```
 
+### 迭代器失效
 
+* vector
+  * 当插入（push_back）一个元素后，end操作返回的迭代器肯定失效
+  * 当插入(push_back)一个元素后，capacity返回值与没有插入元素之前相比有改变，则需要重新加载整个容器，此时first和end操作返回的迭代器都会失效
+  * 当进行删除操作（erase，pop_back）后，指向删除点的迭代器全部失效；指向删除点后面的元素的迭代器也将全部失效。
+* list
+  * 插入操作（insert）和接合操作（splice）不会造成原有的list迭代器失效，这在vector中是不成立的，因为vector的插入操作可能造成记忆体重新配置，导致所有的迭代器全部失效
+  * list的删除操作（erase）也只有指向被删除元素的那个迭代器失效，其他迭代器不受影响。（list目前只发现这一种失效的情况）
+* deque
+  * 在deque容器首部或者尾部插入元素不会使得任何迭代器失效。
+  * 在其首部或尾部删除元素则只会使指向被删除元素的迭代器失效。 
+  * 在deque容器的任何其他位置的插入和删除操作将使指向该容器元素的所有迭代器失效。
+* set & map
+  * 与list相同，当对它进行insert和erase操作时，操作之前的所有迭代器，在操作完成之后都依然有效，但被删除的元素的迭代器失效。
 
 ### vector
 
