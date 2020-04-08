@@ -491,19 +491,33 @@ cout << s << endl;
   * `s.erase(s.begin())`
 * `substr(index, size);//`子字符串，size 正数取size个，size 负数倒取
 
-* string 转数字
+### string转数字
 
 ```c++
-//sstream
-string s = "1234";
-int i;
-stringstream ss;
-ss << s;
-s >> i;
+//通过stream,sstream的转换
 
-//atoi
-int i = stoi(s);
+	#include <iostream>
+	#include <string>
+	#include <sstream>
+	string line;
+	getline(cin, line);
+	stringstream ss(line);
+	int a, b;
+	ss >> a >> b;
 ```
+
+```c
+// c中通过多次调用strtol,跳出条件为 *p1 != '\0'
+
+while ( *p1 != '\0'){
+		a = (int )strtol(p1, &p2, 10);
+		p1 = p2;	
+		b = (int) strtol(p1 ,&p2, 10);
+		p1 = p2;
+}
+```
+
+
 
 ### 迭代器失效
 
