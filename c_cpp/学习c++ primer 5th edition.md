@@ -49,3 +49,144 @@ const *Person p = &p1;//指针const
   * decltype((i))返回的为引用，双层括号必返回引用
 * auto
   * 会忽略const，如需要const，应显示的定义`const auto`
+
+
+
+## 3 string & vector
+
+### 3.1 string
+
+string 初始化
+
+```c++
+    string s1;
+    string s2(s1);
+    string s3("value");
+    string s4(50, 'c');
+```
+
+string 的操作
+
+| 操作             |                      |
+| ---------------- | -------------------- |
+| os << s, is >> s | 输入，输出           |
+| getline(is, s)   | 读取一行到s          |
+| s.empty()        | 判断空               |
+| s.size()         | size                 |
+| s[n]             | 索引到s的n个字符     |
+| s1+s2            | 字符串连接           |
+| s1=s2            | 赋值                 |
+| s1==s2           | 判断相等，大小写敏感 |
+| s1!=s2           | 不相等               |
+| < , <=, >, >=    | 判断大于，小于       |
+
+###  vector
+
+```c++
+#include <iostream>
+#include <vector>
+
+//初始化
+	vector<string> v1;
+    vector<string> v2(v1);
+    vector<string> v3(10, "hello");
+    vector<string> v4(10);
+    vector<string> v5 {"hello", "world", "cpp"};
+//添加元素
+	v1.push_back(3);
+	
+
+```
+
+* 在for each循环中，不要使用`push_back()`
+* vector的操作
+
+| vector              | 操作                |
+| ------------------- | ------------------- |
+| v.empty()           |                     |
+| v.size()            |                     |
+| v.push_back         |                     |
+| v[n]                | 返回第n个元素的引用 |
+| v1 = v2             |                     |
+| v1 = {a, b, c, ...} | 列表初始化          |
+| v1 == v2            |                     |
+| v1 != v2            |                     |
+| <, >, <=, >=        |                     |
+
+* `vector<int>::size_type` 而不是 `vector::size_type` ，
+* 不能用下标的形式添加元素
+
+### 3.3 迭代器
+
+* 迭代器运算符
+
+| 迭代器    | 作用                         |
+| --------- | ---------------------------- |
+| *iter     | 返回迭代器iter指向元素的引用 |
+| iter->num | 获取num                      |
+| _         |                              |
+| --iter    |                              |
+| ==        |                              |
+| !=        |                              |
+
+* 迭代器的失效，一些有副作用的操作，使得迭代器失效
+* 在C++中迭代器使用!=，而不是<,>,因为大多数类库都实现了!=
+* 迭代器的类型
+
+```c++
+vector<int>::iterator it;
+string::iterator it2;
+//const 只能读，不能写
+vector<int>::const_iterator it3;
+string::const_iterator it4;
+
+```
+
+* begin，end，会识别是不是const
+* (*it).empty() 而不是 *it.empty(),或者it->empty()
+* iterator::difference_type，带符号整数
+
+## 表达式
+
+| 结合律        | 功能               | 用法            |
+| ------------- | ------------------ | --------------- |
+| 左 ::         | 全局作用域         | ::name          |
+| 左 ::         | 类作用域           | class::name     |
+| 左 ::         | 命名空间作用域     | namespace::name |
+|               |                    |                 |
+| 左 .          | 成员               |                 |
+| 左 ->         | 成员               |                 |
+| 左 []         | 下标               |                 |
+| 左 ()         | 函数调用           |                 |
+| 左 ()         | 类型构造           | type(expr_list) |
+|               |                    |                 |
+| ++            |                    |                 |
+| --            |                    |                 |
+| typeid        |                    |                 |
+| typeid        |                    |                 |
+| explicit cast |                    |                 |
+| 逻辑运算      | != < >             |                 |
+| ~             | 位取反             |                 |
+| -             | 一元负号           |                 |
+| +             | 一元正号           |                 |
+| *             | 解引用             |                 |
+| &             | 取地址             |                 |
+| ()            | 类型转换           |                 |
+| sizeof        |                    |                 |
+| new           |                    |                 |
+| delete        |                    |                 |
+| noexcept      |                    |                 |
+|               |                    |                 |
+| ->*           | 指向成员选择的指针 |                 |
+| .*            | 指向成员选择的指针 |                 |
+|               |                    |                 |
+| + -           |                    |                 |
+|               |                    |                 |
+| << >>         | 位移位             |                 |
+|               |                    |                 |
+|               |                    |                 |
+
+* 太多了，见cpp primer， 147
+
+
+
