@@ -6,5 +6,15 @@
 
 
 
+## pat1011 advanced
 
+```c++
+//c++ 保留n位小数
+    double value = (value * 0.65 - 1) * 2;
+
+    cout << fixed << setprecision(2);
+    cout << value << endl;
+//求三个值的最大值，需要两条判断语句
+
+```
 

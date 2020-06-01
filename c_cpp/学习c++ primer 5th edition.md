@@ -481,3 +481,243 @@ Sales_data item2 = null_book;//错误，explicit禁止拷贝构造
   * 静态成员函数不能使用this，也不能在后面加const
   * 可以用类名访问静态成员，也可以用对象名
   * 可以在类的内部和外部定义static函数。在外部定义时，不要重复定义static，这个关键字只出现在类的内部
+
+## 8 I/O
+
+* 不能拷贝流对象进行赋值
+
+| strm::iostate |            |
+| ------------- | ---------- |
+| strm::badbit  | 流崩溃     |
+| strm::failbit | IO操作失败 |
+| strm::eofbit  | 文件结束   |
+| strm::godbit  | 流未出错   |
+
+* unitbuf操作符：在每次操作后都刷新缓冲区
+
+```c++
+cout << unitbuf;
+cout << nounitbuf;//回到正常模式
+```
+
+* 文件流
+
+| mode   |                          |
+| ------ | ------------------------ |
+| in     | 读                       |
+| out    | 写                       |
+| app    | append，写操作定位到末尾 |
+| ate    | 打开后立即定位到末尾     |
+| trunc  | 截断文件                 |
+| binary | 二进制IO                 |
+
+* ofsteam，fstream，可设定写
+* ifsteam，fstream，可设定读
+* out设定，才能设定trunc或者app
+* 默认情况out，trunc模式，会舍弃文件的原有内容，要追加内容，显示的加上app
+
+
+
+* string流
+  * istringstream
+  * ostringstream
+
+## 9 顺序容器
+
+* `vector` 可变大小的数组
+* `deque` 双端队列
+* `list` 双向链表
+* `forward_list` 单向链表
+* `array` 固定大小的数组
+* `string`
+
+
+
+* 选择标准：一般用vector
+* 小元素和对空间要求高不要用list
+* vector和deque支持随机访问
+
+
+
+| 类型别名        |                            |
+| --------------- | -------------------------- |
+| iterator        | 迭代器                     |
+| const_iterator  | 只读迭代器                 |
+| size_type       | 无符号整数，容器的最大大小 |
+| difference_type | 带符号整数，容器之间距离   |
+| value_type      | 元素类型                   |
+| reference       | 引用                       |
+| const_reference | 只读引用                   |
+
+| 构造函数        |                      |
+| --------------- | -------------------- |
+| C c             | 默认构造器           |
+| C c1(c2);       | 拷贝构造             |
+| c c(b,e)        | 拷贝b,e之间的元素到c |
+| C c{a,b,c,....} | 列表初始化           |
+
+| 赋值与swap         |          |
+| ------------------ | -------- |
+| c1 = c2            | 赋值     |
+| c1 = {a, b, c,...} | 列表替换 |
+| a.swap(b)          |          |
+| swap(a,b)          |          |
+
+| 大小         |      |
+| ------------ | ---- |
+| c.size()     |      |
+| c.max_size() |      |
+| c.empty()    |      |
+
+| 添加和删除      |      |
+| --------------- | ---- |
+| c.insert()      |      |
+| c.emplace(args) |      |
+| c.erase         |      |
+| c.clear         |      |
+
+| 关系运算符 |      |
+| ---------- | ---- |
+| ==， !=    |      |
+| <,<=,>=,>  |      |
+
+* 迭代器范围[begin,end),是一个左闭合区间，我们可以得到一些假定：
+  * 如果begin等于end，那么区间为空
+  * 如果不为空，那么至少有一个元素
+  * 通过有限次递增，可以使得begin==end
+
+* array具有固定大小,声明时也需要指定其大小
+
+```c++
+array<int, 42>
+```
+
+* 内置数组不能拷贝，array可以拷贝构造
+
+* assign的三种重载
+  * s.assign(bengin,end) 迭代器之间
+  * s.assign(n,t) n个t
+  * s.assign({3,2,1}) 替换为初始化列表
+
+* 添加元素，insert，push_back,push_front,emplace
+
+
+
+* insert返回值返回当前位置的迭代器，用insert的返回值可以在当前位置反复插入元素
+* emplace调用构造函数
+
+* 访问元素返回的是引用
+
+| 访问元素  |                                     |
+| --------- | ----------------------------------- |
+| c.back()  | 返回尾元素的引用，c为空，行为未定义 |
+| c.front() |                                     |
+| c[n]      | 越界无out_of_range异常              |
+| c.at(n)   | 若越界，抛出out_of_range异常        |
+
+* 删除元素
+
+| 函数        |                                           |
+| ----------- | ----------------------------------------- |
+| pop_back()  | 若为空，行为未定义；                      |
+| pop_front() |                                           |
+| erase(p)    | 删除迭代器p指向的元素，返回被删后的迭代器 |
+| erase(b,e)  | 可用于删除多个元素                        |
+| clear()     |                                           |
+
+* forward_list有自己版本的erase
+* erase若删除end迭代器，返回尾后迭代器，若删除尾后迭代器，行为未定义
+
+### forward_list
+
+* 未定义insert、erase、emplace
+* 定义了begin、end、before_begin(返回首前迭代器)
+* 定义了insert_arfter,erase_after,emplace_after
+* 添加和删除元素时，多需要关注两个迭代器，当前处理的和前驱
+
+
+
+* resize函数
+  * resize(n)
+  * resize(n,t)
+  * array不支持
+  * 如果增大将会初始化，减小会删除后面的元素
+* 编写改变容器的循环
+
+```c++
+while (begin != v.end())//用这个代替下一行
+end = v.end(); while (begin != end//不要使用这个
+```
+
+* vector 的增长
+  * size(),capacity()
+  * reserve(n)分配至少n
+  * shrink_to_fit()回收一部分
+
+### string
+
+* 其他的构造函数
+
+| 函数                   |                                  |
+| ---------------------- | -------------------------------- |
+| string s(cp, n)        | cp是c风格字符串，拷贝cp前n个字符 |
+| string s(s2, pos2)     | 从下标尾pos2开始拷贝             |
+| string s(s2,pos2,len2) | 从下标尾pos2开始拷贝len2个元素   |
+
+* substr
+
+  * s.substr(pos,n)
+
+  * 返回子字符串
+
+* 假定你希望每次读取一个字符存入一个string中，而且知道最少需要读取100个字符，应该如何提高程序的性能？
+
+  * 大致的思路就是每次写一个字符，string都会去扩充内存，还不如一次就让内存扩大一点
+
+* append replace
+
+| 函数                  |                               |
+| --------------------- | ----------------------------- |
+| s.insert(pos,args)    |                               |
+| s.erase(pos,len)      |                               |
+| s.assign(args)        |                               |
+| s.replace(range,args) | range是一对迭代器或者一组下标 |
+| s.append(args)        |                               |
+
+* find
+
+| 函数                    | args            |
+| ----------------------- | --------------- |
+| find()                  | c，pos          |
+| cfind()                 | s2,pos          |
+| find_first_of(args)     | cp,pos          |
+| find_last_of(args)      | cp,pos,n        |
+| find_first_not_of(args) | cp是c风格字符串 |
+| find_last_not_of(args)  | c是字符         |
+
+* compare
+
+| args               |      |
+| ------------------ | ---- |
+| s2                 |      |
+| pos1,n1,s2         |      |
+| pos1,n1,s2,pos2,n2 |      |
+| cp                 |      |
+| pos1,n1,cp         |      |
+| pos1,n1,cp,n2      |      |
+
+* 数值转换
+
+| 函数                         |      |
+| ---------------------------- | ---- |
+| to_string()                  |      |
+| stoi,stol,stoul,stoull,stoll |      |
+| stof,stod,stold              |      |
+
+
+
+## 10
+
+
+
+## 11 关联容器
