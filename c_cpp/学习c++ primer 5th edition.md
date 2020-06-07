@@ -716,7 +716,265 @@ end = v.end(); while (begin != end//不要使用这个
 
 
 
-## 10
+## 10 泛型算法
+
+* 初识泛型算法
+
+```c++
+find(begin, end, val);
+```
+
+* 迭代器让算法不依赖于容器，返回迭代器，可以通过返回的是否是尾后迭代器判断find成功还是失败；
+* 算法依赖元素的类型，find使用==，也有其他的可能用><
+
+* 只读算法：只读取输入的内容，不改变元素
+
+```c++
+string sum = accumulate(v.begin(), v.end(), string(""));
+string sum = accumulate(v.begin(), v.end(), "");//错误
+```
+
+* ""为const char * 类型，没有+操作；string则有；accumulate第三个参数是求和的起点
+
+* equal(v1.begin(), v1.end(), v2.begin());
+  * v2只接受begin，默认v2等于或长于v1
+
+
+
+### 泛型算法结构
+
+| 迭代器         |                                |
+| -------------- | ------------------------------ |
+| 输入迭代器     | 只读，不写；单遍扫描，只能递增 |
+| 输出迭代器     | 写，不读；单，递增             |
+| 前向迭代器     | 读写， 多，递增                |
+| 双向迭代器     | 读写，多，可增可减             |
+| 随机访问迭代器 | 读写，多，支持全部迭代器操作   |
+
+* 算法的形参
+
+```c++
+alg(beg,end, other args);
+alg(beg,end,dest, other args);
+alg(beg,end, beg2,other args);
+alg(beg,end, beg2, end2, other args);
+```
+
+* 命名规范
+
+```c++
+//反向操作
+reverse(beg, end);
+reverse_copy(beg, end, dest);
+//删除操作
+remove_if(beg ,end, arg);
+remove_copy_if();
+```
+
+### 迭代器
+
+* 插入迭代器
+  * back_insertor,调用push_back
+  * front_insertor,调用push_front
+  * insertor(lst, lst.begin()); 
+* istream_iterator
+
+```c++
+//构造vector
+istream_iterator<int> in_iter(cin), eof;
+while (in_iter != eof)
+{
+    vec.push_back(*in_iter++);
+}
+//or
+istream_iterator<int> in_iter(cin), eof;
+vector<int> vec(in_iter, eof);
+
+//用算法操作流迭代器
+cout << accumulate(in_iter, eof, 0) << endl;
+```
+
+* 流迭代器允许使用懒惰赋值，在你第一次调用时，保证已经读取数据
+
+* ostream_iterator
+
+```c++
+ostream_iterator<int> out_iter(cout, " ");
+for (auto e : vec)
+    *out_iter++ = e;//写入到cout
+cout << endl;
+
+//也可以忽略* ++,也是同样的效果
+for (auto e : vec)
+    out_iter = e;//写入到cout
+cout << endl;
+
+//使用copy写元素
+copy(v.begin(), v.end(), out_iter);
+```
+
+* 反向迭代器
+
+```c++
+//用反向迭代器找到最后一个单词
+//line = "first, mid, last"
+auto rcomma = find(line.crbegin(), line.crend(), ',');
+cout << string(line.crbegin(), rcomma) << endl;//将打印tsal
+
+//使用reverse_iterator的base成员完成正向转换
+cout << string(rcomma.base(), line.end()) << endl;//打印last
+```
+
+* 反向迭代器base生成的是相邻的位置，由于左开右闭合的性质
+
+### 常见泛型算法
+
+* fill
+
+```c++
+//v需要有足够空间可写
+fill(v.begin(),v.end(), 10);
+fill_n(v.begin(), v.size(), 10);
+```
+
+* copy
+
+```c++
+auto ret = copy(beg, end, beg2);//ret为beg2拷贝之后的迭代器
+```
+
+* replace
+
+```c++
+replace(beg, end, 10);//10替换
+replace(beg, end, 0, 10);//0改为10
+//原容器不变，替换后的结果写入dest
+replace_copy(beg, end, dest, 0, 42);
+```
+
+* sort, unique，sort排序，unique消除相邻的相同元素
+
+```c++
+sort(wd.begin(), wd.end());//字典序排序
+auto uni = unique(wd.begin(), wd.end());
+wd.erase(uni, wd.end());
+```
+
+* for_each
+
+```c++
+//打印v的元素
+for_each(v.begin(), ve.end(),
+		[](const int i)
+		{cout << i << " ";});
+```
+
+
+
+### lambda
+
+```c++
+//sort还接受第三个参数，用来定制排序
+bool isShortor(const string &s1, const string &s2)
+{
+	return s1.size() < s2.size();
+}
+sort(wd.begin(), wd.end(), isShorter);
+```
+
+* lambda
+
+```c++
+[捕获列表](参数)->返回类型{语句};
+```
+
+* 可以忽略参数和返回类型，返回类型根据最后一句return判断，如果最后一句不是return，则为void
+
+```c++
+//lambda版本的按字符个数sort
+sort(wd.begin(), wd.end(),
+	[](const string &s1, const string &s2)
+	{return s1.size() < s2.size();});
+```
+
+* 捕获列表
+
+```c++
+string::size_type sz = 6;
+//找到长度大于6的首个单词
+find_if(vc.begin(), vs.end(),
+       [sz](const string &s)
+        {return s.size() >= 6;});
+```
+
+* 值捕获和引用捕获
+
+```c++
+int i = 10;
+auto f1 = [i] {return i};
+auto f2 = [&i] {return i};
+```
+
+* 流对象不能拷贝，使用引用
+* 隐式捕获
+
+```c++
+int i,j;
+auto f = [=] {return i+j;};//值捕获
+auto f2 = [&] {return i+j};//引用捕获
+
+auto f3 = [&,i]{return i+j};//i为值捕获，j为引用捕获
+auto f4 = [i,=]{return i+j};//错误，隐式捕获在前面
+```
+
+* 可变lambda
+
+```c++
+size_t v1 = 42;
+auto f = [v1] ()mutable {return ++v1; };
+v1 = 0;
+auto j = f();//j=43,不加mutable则不会改变，
+```
+
+* 返回类型
+
+```c++
+//transform将容器替换为可调用对象返回的值
+transform(vi.begin(), vi.end(),
+			[](int i) 
+			{if (i < 0) return -i;else return i;});
+//错误，不能推测返回类型
+
+//指定返回类型
+transform(vi.begin(), vi.end(),
+			[](int i) ->int 
+			{if (i < 0) return -i;else return i;});
+
+```
+
+* bind
+  * functional头文件
+
+```c++
+using std::placeholders::_1;
+//将lambda改写函数，check_size
+bool check_size(const string &s1, string::size_type sz)
+{
+    return s1.size() >= sz;
+}
+
+auto wc = find_if(v.begin(), v.end(),
+                 bind(check_size, _1, 6));
+```
+
+* 重排参数
+
+```c++
+sort(v.begin(), v.end(), isShortor);按单词长度排序
+sort(v.begin(), v.end(), bind(), bind(isShortor,_2,_1));//反向
+```
+
+* list,forword_list,vector等有特定版本的容器算法
 
 
 
