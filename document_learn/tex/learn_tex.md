@@ -191,3 +191,11 @@ printf("Hello, world!");
 \end{enumerate}
 ```
 
+
+
+```shell
+bmeps -c xx.pdf xx.eps #eps格式
+pdf2svg xx.pdf xx.svg #linux svg格式
+
+```
+

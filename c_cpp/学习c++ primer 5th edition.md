@@ -27,11 +27,11 @@ warn: 初始化不是赋值，初始化是创建时赋予一个初始值；赋�
 
 * char* const q & const char* p (顶层const)
 
-```
+```c++
 Person p1("Fred", 200);
 const Person* p = &p1;//对象const
 person const* p = &p1;//对象const
-const *Person p = &p1;//指针const
+person *const p = &p1;//指针const
 ```
 
 * 识别技巧，从右往左读，p先和左边的符号结合，即*p or const p
@@ -979,3 +979,312 @@ sort(v.begin(), v.end(), bind(), bind(isShortor,_2,_1));//反向
 
 
 ## 11 关联容器
+
+* map,set,multimap,multiset
+* unordered_map,unordered_set,unordered_multimap,unordered_multiset
+
+* 构造
+
+```c++
+map<string, size_t> word_cont;
+set<string> st;
+
+map<string, size_t> word_cont = {{"str1", 10}
+                                 {"str2", 20}};
+```
+
+* 关键字：map第一个为关键字
+* 严格弱序：元素之间可比较，小于等于
+
+* pair
+
+```c++
+pair<T1, T2> p;
+pair<T1, T2> p(v1, v2);
+pair<T1, T2> p = {v1, v2};
+
+make_pair(v1, v2);
+p.fisrt
+p.second
+#符号运算
+< > >= <=
+p1 == p2
+p1 != p2
+```
+
+
+
+* 关联容器操作
+
+| 类型别名    |                                 |
+| ----------- | ------------------------------- |
+| key_type    | 关键字类型                      |
+| mapped_type | 关键字关联的类型；map           |
+| value_type  | set:key_type 相同；map:返回pair |
+
+* 迭代器begin，end
+* map迭代器返回的是pair的引用，但是pair的first不能改变
+* set迭代器是const的
+
+
+
+* insert
+
+```c++
+m.insert({word, 1});
+m.insert(make_pair(word, 1));
+m.insert(pair<string, int> (word, 1));
+m.insert(map<string, int>::value_type (word, 1) );
+
+m.insert(b, e);
+m.insert(il); //列表
+```
+
+* insert返回pair,fisrt为插入后的迭代器，second为bool，插入成功为true
+* multimap,multiset, 插入后必成功，返回迭代器
+
+
+
+* erase,返回0，1，0为删除的元素不在容器，如果有多个元素，则删除多个元素
+
+* map的下标，下标操作是一种副作用操作，先搜索关键字，元素存在，则赋值，不存在则插入
+* 下标操作返回值为mapped_type
+
+
+
+* 访问元素,find不产生副作用
+
+```c++
+set = {0,1,2,3,4,5,6,7,8,9}
+set.find(1);//return 1的迭代器
+set.find(11);//尾后迭代器
+set.count(1);//1
+set.count(11);//0
+
+```
+
+* multi迭代器
+  * lower_bound() ----> upper_bound()
+  * equal_range.fisrt -----> equal_range.second
+
+* 无序的关联容器
+
+
+
+## 12 动态内存
+
+### 动态内存和智能指针
+
+* new和delete，new []和delete[]
+
+* shard_ptr,允许多个指针指向一个对象
+* unique_ptr，独占一个对象
+* weak_ptr，伴随shared
+
+
+
+* shared_ptr
+
+| share和unique都支持的操作 | 作用                      |
+| ------------------------- | ------------------------- |
+| _ptr<T> sp                | 空指针，可指向类型T的对象 |
+| p                         | 条件判断                  |
+| *p                        | 解引用                    |
+| p->mem                    |                           |
+| p.get()                   | 返回p保存的指针           |
+| swap(p, q)                |                           |
+| p.swap(q)                 |                           |
+
+| shared独有操作       | 作用                                      |
+| -------------------- | ----------------------------------------- |
+| make_shared<T>(args) | 返回一个shared_ptr,指向动态内存分配的对象 |
+| shared_ptr<T> p(q)   | 拷贝，增加q计数                           |
+| p=q                  | q加计数，p减                              |
+| p.unique()           | p.use_count()=1,返回true；否则返回false   |
+| p.use_count()        | 返回计数，可能很慢                        |
+
+* 拷贝和赋值都会增加shared计数，赋新值或离开作用域会减少计数，计数等于0，指向的对象被释放
+* 被释放是通过析构函数
+* 通常使用动态内存的原因：
+  * 程序不知道自己需要使用多少对象
+  * 不知道对象的准确类型
+  * 需要多个对象共享数据
+
+
+
+* new，返回对象指针，new会调用相应的构造函数
+* const new,const对象必须被初始化
+
+```c++
+const in *pci = new const int(1024);
+```
+
+* new内存耗尽
+
+```c++
+int *p1 = new int;//分配失败，抛出std::bad_alloc
+int *p2 = new (nothrow) int;//返回nullptr
+```
+
+* new的定位
+
+* delete，删除一个指向动态内存的一个区域
+
+```c++
+int i, *pil = &i, *pil2 = nullptr;
+double *pd = new double(33), *pd2 = pd;
+delete i;//错误，i不是指针
+delete pil;//未定义，指向局部变量
+delete pil2;//正确，删除空指针总正确
+delete pd;//正确
+delete pd2;//未定义，指向的内存已经被释放了
+```
+
+* const 动态内存可以被释放
+
+```c++
+const int* p = new const int(1024);
+delete p;//正确
+```
+
+* 动态内存的生命周期，直到显式被释放
+
+* delete删除后指针变成了空悬指针，保留了地址，数据已经被释放；一种好的做法是，delete后显式赋值nullptr
+
+
+
+* shared_pte和new结合
+
+```c++
+//错误，必须使用直接初始化
+shared_ptr<int> p1 = new int(1024);
+shared_ptr<int> p1(new int(1024));
+```
+
+| 定义和改变shared的其他操作 | 作用                 |
+| -------------------------- | -------------------- |
+| shared_ptr<T>p(q)          | q内置指针            |
+| shared_ptr<T>p(u)          | 接管unique_ptr,u置空 |
+| shared_ptr<T>p(q,d)        | d删除器              |
+| shared_ptr<T>p(p2, q)      |                      |
+| shared_ptr<T>p.reset()     | p置空                |
+| shared_ptr<T>p.reset(q)    | 内置指针q，p指向q    |
+| shared_ptr<T>p.reset(q,d)  |                      |
+
+* 不要混合使用普通指针和智能指针
+* 不要用get初始化另外一个智能指针或赋值智能指针
+
+
+
+### 智能指针和异常
+
+```c++
+void f()
+{
+	shared_ptr<int> sp(new int(1024));
+	//抛出一个异常，且f未捕获
+}//函数结束自动释放内存
+
+//若函数f外无指针指向这块内存，这块内存不能被释放了
+void f2()
+{
+    int *ip = new int(42);
+    //抛出一个异常，且f未捕获
+    delete ip;
+}
+```
+
+### uniqe_ptr
+
+| 函数                   | 作用              |
+| ---------------------- | ----------------- |
+| unique_ptr<T> u1       | 空指针            |
+| unique_ptr<T，D> u1    | 调用类型为D删除器 |
+| unique_ptr<T，D> u1(d) |                   |
+| u = nullptr            | 释放，u置空       |
+| u.release()            | 释放，置空        |
+| u.reset()              |                   |
+| u.reset(q)             |                   |
+| u.reset(nullptr)       |                   |
+
+* 不能拷贝和赋值unique
+
+```c++
+uniqe_ptr<int> p1(10);
+uniqe_ptr<int> p2(p1.release());
+uniqe_ptr<int> p3;
+p3.reset(p2.release());
+
+p2.release();//错误，p2不会释放内存，并且我们丢失了指针
+```
+
+### weak_ptr
+
+| 函数              | 作用                                                   |
+| ----------------- | ------------------------------------------------------ |
+| weak_ptr<T> w     | 空                                                     |
+| weak_ptr<T> w(sp) | shared                                                 |
+| w = p             |                                                        |
+| w.reset()         | w置空                                                  |
+| w.use_count()     |                                                        |
+| w.expired()       | use=0，返回false；否则返回true                         |
+| w.lock()          | expired=true,返回空的shared；否则返回指向w对象的shared |
+
+### 动态数组
+
+```c++
+typedef int arrT[42];
+int *p = new arrT;//new []
+```
+
+* 分配空数组是合法的
+
+```c++
+size_t n = 0;
+int arr[n];//非法
+int *p = new int[n];//合法,new返回一个与其他new的指针都不相同
+for (int *q = p; q != p + n; ++q)
+    ;
+```
+
+* delete
+* 智能指针和动态数组
+
+```c++
+unique_ptr<int[]> up(new int[10]);
+up.release();//自动调用delete[]
+for (size_t i = 0; i != 10; i++)
+    up[i] = i;
+```
+
+* 不能使用.和->，可以使用[],因为up指向的是数组
+
+* allocator
+
+```c++
+    allocator<string> alloc;
+    size_t n = 10;
+    auto const p = alloc.allocate(n);
+    auto q = p;
+    alloc.construct(q++);
+    alloc.construct(q++, 10, 'c');
+    alloc.construct(q++, "hi");
+    
+    for(size_t si=0; p + si != q; si++)
+        cout << *(p+si) << endl;
+    while (q != p)
+        alloc.destroy(--q);
+    
+   alloc.deallocate(p, n);//收回内存
+
+```
+
+* allocator拷贝和fill
+
+```c++
+vector<int> vi {1,2,3,5};
+auto p = alloc.allocate(vi.size() * 2);
+auto q = uninitialized_copy(vi.begin(), vi.end(), p);
+uninitialized_fill_n(q, vi.size(), 42);
+```
+
