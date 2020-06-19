@@ -6,6 +6,13 @@ sudo pacman -Syy
 [archlinuxcn]
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 
+[archlinuxcn]
+SigLevel = TrustAll
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+[antergos]
+SigLevel = TrustAll
+Server = https://mirrors.tuna.tsinghua.edu.cn/antergos/$repo/$arch
+
 
 #安装 archlinuxcn-keyring 包导入GPG key
 sudo pacman -Sy archlinuxcn-keyring
