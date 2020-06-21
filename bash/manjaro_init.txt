@@ -7,23 +7,26 @@ sudo pacman -Syy
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 
 [archlinuxcn]
-SigLevel = TrustAll
+#SigLevel = TrustAll
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 [antergos]
-SigLevel = TrustAll
+#SigLevel = TrustAll
 Server = https://mirrors.tuna.tsinghua.edu.cn/antergos/$repo/$arch
 
 
 #安装 archlinuxcn-keyring 包导入GPG key
 sudo pacman -Sy archlinuxcn-keyring
-sudo pacman -S yay
+sudo pacman -S yaourt
 
+错误信息为 /usr/bin/hardcode-fixer: line 140: [::integer expression expected
+sudo pacman -R hardcode-fixer 
 
 中文输入法
 sudo pacman -S fcitx-sogoupinyin
 sudo pacman -S fcitx-im
 sudo pacman -S fcitx-configtool # 图形化的配置工具
 
+sudo pacman -S gcc gdb code typora vim bochs ranger make figlet screenfetch
 vscode
 chrome
 typora 
@@ -83,3 +86,16 @@ gimp
 wttr
 
 alacritty 参考 https://www.cnblogs.com/siyingcheng/p/11706436.html
+
+
+anaconda
+	conda config --set auto_activate_base false
+	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud//pytorch/
+	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+	conda config --set show_channel_urls yes
+
+
+
+
