@@ -40,7 +40,8 @@ sudo pacman -S vscode vim gcc typora bochs make cmake figlet screenfetch gdb chr
 
 * vim
 
-```
+```c++
+vim plugin
 
 ```
 
@@ -74,5 +75,24 @@ conda config --set auto_activate_base false
 	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud//pytorch/
 	conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
 	conda config --set show_channel_urls yes
+```
+
+* latex
+
+```shell
+# download ios
+sudo pacman -S perl-tk
+sudo mount -o loop texlive.iso /mnt
+cd /mnt
+sudo ./install-tl -gui 
+sudo pacman -S texstudio
+sudo umount
+```
+
+* vscode
+
+```shell
+#插件 c code runner
+#setting->zoom level:1  text font:18
 ```
 
