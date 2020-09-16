@@ -1288,3 +1288,104 @@ auto q = uninitialized_copy(vi.begin(), vi.end(), p);
 uninitialized_fill_n(q, vi.size(), 42);
 ```
 
+
+
+
+
+
+
+
+
+类键盘输入模板
+
+```c++
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Student{
+    public:
+        friend istream &operator>>(istream &is, Student &s);        
+        void print()
+        {
+            cout << this->name << " " << this->ID << endl;
+        }
+    private:
+        string name, ID;
+        char gender;
+        int grade;  
+};
+istream & operator>>(istream &is, Student &s)
+{
+    is >> s.name;
+    is >> s.gender;
+    is >> s.ID;#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Student{
+    public:
+        friend istream &operator>>(istream &is, Student &s);        
+        void print()
+        {
+            cout << this->name << " " << this->ID << endl;
+        }
+    private:
+        string name, ID;
+        char gender;
+        int grade;  
+};
+istream & operator>>(istream &is, Student &s)
+{
+    is >> s.name;
+    is >> s.gender;
+    is >> s.ID;
+    is >> s.grade;
+
+    return is;
+}
+int main()
+{
+    int i;
+    Student tmp;
+    vector<Student> vstd;
+    cin >> i;
+    for (;i>0; i--)
+    {
+        cin >> tmp;
+        vstd.push_back(tmp);
+    }
+    for (auto st : vstd)
+        st.print();
+    
+    return 0;
+}
+    is >> s.grade;
+
+    return is;
+}
+int main()
+{
+    int i;
+    Student tmp;
+    vector<Student> vstd;
+    cin >> i;
+    for (;i>0; i--)
+    {
+        cin >> tmp;
+        vstd.push_back(tmp);
+    }
+    for (auto st : vstd)
+        st.print();
+    
+    return 0;
+}
+
+3
+Joe M Math990112 89
+Mike M CS991301 100
+Mary F EE990830 95
+```
+
