@@ -26,7 +26,7 @@ Plug 'junegunn/seoul256.vim'
 Plug 'tpope/vim-vividchalk'
 Plug 'connorholyday/vim-snazzy'
 Plug 'jiangmiao/auto-pairs'
-"Plug 'ycm-core/YouCompleteMe'
+Plug 'ycm-core/YouCompleteMe'
 
 call plug#end()
 
@@ -49,8 +49,9 @@ autocmd Filetype markdown inoremap ,l [](<++>)<Esc>F]i
 autocmd Filetype markdown inoremap ,W <Esc>:w<CR>:!typora %<CR>
 
 au BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
-"let g:ycm_server_python_interpreter='/usr/bin/python'
-"let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+
+let g:ycm_server_python_interpreter='/usr/bin/python'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
 
 
 " C
